@@ -29,3 +29,16 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - zookeeper
+
+  topic-creator:
+    image: wurstmeister/kafka:2.13-2.7.0
+    depends_on:
+      - kafka
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "
+      sleep 10 &&
+      /opt/kafka/bin/kafka-topics.sh --create --topic topic-test
+      --partitions 1 --replication-factor 1
+      --if-not-exists --zookeeper zookeeper:2181
+      "
